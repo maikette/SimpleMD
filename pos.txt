@@ -1,0 +1,5 @@
+--Put anothing you want before start, notes and the like. 
+
+start
+type 0 | 1 2
+type 0 | 1 3
