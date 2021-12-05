@@ -62,13 +62,15 @@ def nearest_image(par1,par2):
     r_norm = mag(r_max) 
     for k in constants.combin:
         r_curr = r_max + k
-        if mag(r_curr) > r_norm:
+        #print(r_curr)
+        #print(mag(r_curr))
+        if mag(r_curr) < r_norm:
             r_max = r_curr
     return r_max * constants.box
 
-def forces(par1_ID):
+def forces(par1):
     #Calcuate pair forces based on the Lenard-Lones Potential. Compaires for all 
-    #Calcuate unit vector between the particles:
+    
     return
 
 def update_velocity():
