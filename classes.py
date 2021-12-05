@@ -17,6 +17,10 @@ class Particle:
         self.ID = constants.next_id
         constants.next_id = constants.next_id + 1
 
+    #def string_p():
+    #    output = "ID: " + str(Self.ID)
+    #    return output
+
 
 #I may implment a linked-list cell method, if there is time. 
 class Cell:

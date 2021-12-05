@@ -25,6 +25,7 @@ def initi(postion_inputs, constant_inputs):
             if "type" in l: #Finds a line that contains particle information
                 spl = l.split()
                 constants.part_list.append(classes.Particle(int(spl[3]),int(spl[4]),int(spl[1]))) #Create particle object, saves to the particle list
+        constants.part_list = np.array(constants.part_list)
     with open(constant_inputs,"r") as f:
         lines = f.readlines()
         for i in range(0, len(lines)):
@@ -50,7 +51,7 @@ def initi(postion_inputs, constant_inputs):
                 k = i + 1
                 while lines[k].split(): #While there is something more than a space in the line:
                     spl = lines[k].split()
-                    constants.interactions[(int(spl[0]),int(spl[1]))] = float(spl[3])
+                    constants.interactions[(int(spl[0]),int(spl[1]))] = [float(l) for l in spl[3:]]
                     k = k + 1
             
     #init_velocity() #Initalize velocities
@@ -68,9 +69,29 @@ def nearest_image(par1,par2):
             r_max = r_curr
     return r_max * constants.box
 
-def forces(par1):
+def forces():
     #Calcuate pair forces based on the Lenard-Lones Potential. Compaires for all 
-    
+    for i in range(len(constants.part_list)):
+        curr_par = constants.part_list[i]
+        curr_par.force.fill(0) #make all forces zero here to start
+        print(constants.part_list[np.arange(len(constants.part_list)) != i])
+        for inter_par in constants.part_list[np.arange(len(constants.part_list)) != i]:
+            #inter_par = interact[0]
+            r = nearest_image(curr_par,inter_par)
+            r_mag = mag(r)
+            if r_mag <= constants.cutoff:
+                r_hat = normalized(r)
+                print(r_mag)
+                if (curr_par.type, inter_par.type) in constants.interactions:
+                    a = constants.interactions[curr_par.type, inter_par.type][0]
+                    b = constants.interactions[curr_par.type, inter_par.type][1]
+                elif (inter_par.type, curr_par.type) in constants.interactions:
+                    a = constants.interactions[inter_par.type, curr_par.type][0]
+                    b = constants.interactions[inter_par.type, curr_par.type][1]
+                else: 
+                    print("error - no interaction listed")
+                curr_force = (6*b / r_mag**7 - 12*b / r_mag**13) * r_hat
+                curr_par.forces = curr_par.forces + curr_force
     return
 
 def update_velocity():
@@ -125,5 +146,6 @@ print("masses: " + str(constants.masses))
 print("interactions: " + str(constants.interactions))
 
 print(nearest_image(classes.Particle(1,1), classes.Particle(4,4)))
+forces()
 
 h= 8
