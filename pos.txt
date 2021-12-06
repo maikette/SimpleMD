@@ -1,6 +1,7 @@
---Put anothing you want before start, notes and the like. 
-
 start
 type 0 | 1 2
 type 0 | 12 10
-type 0 | 10 3
+type 0 | 1 6
+type 0 | 1 7
+type 0 | 1 15
+

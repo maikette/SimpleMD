@@ -1,6 +1,10 @@
 import numpy as np
 
-a = np.arange(9, -1, -1)     # a = array([9, 8, 7, 6, 5, 4, 3, 2, 1, 0])
-b = a[np.arange(len(a))!=0]  # b = array([9, 8, 7, 5, 4, 3, 2, 1, 0])
+a = np.array([0,1,2])     # a = array([9, 8, 7, 6, 5, 4, 3, 2, 1, 0])
+b = np.array([-1,3,1])
 
-print(b)
+box = np.array([2,3,4])
+
+h = (a + b) % box
+
+print(h)

@@ -14,6 +14,10 @@ masses = dict() #dict to hold the masses of varying particles types.
 interactions = dict() #to hold the constants for the Lenard-Jones potential
 current_step = 1
 
+
 #things that are just nice to recalc:
 combin = np.array(list(product([-1,0,1],repeat=2)))
 next_id = 0
+
+#Physical constants
+kB = 1.38064852*10**(-23)
