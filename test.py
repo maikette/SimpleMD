@@ -1,13 +1,24 @@
-import matplotlib.animation as animation
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+import md
+import constants as con
 
-fig = plt.figure()
+x_data = []
+y_data = []
 
-def updatefig(i):
-    fig.clear()
-    p = plt.plot(np.random.random(100))
-    plt.draw()
+fig, ax = plt.subplots()
+ax.set_xlim(0, 105)
+ax.set_ylim(0, 12)
+line, = ax.plot(0, 0)
 
-anim = animation.FuncAnimation(fig, updatefig, 10)
-anim.save("/tmp/test.avi", fps=1)
+def animation_frame(i):
+	x_data.append(i * 10)
+	y_data.append(i)
+
+	line.set_xdata(x_data)
+	line.set_ydata(y_data)
+	return line, 
+
+animation = FuncAnimation(fig, func=animation_frame, frames=np.arange(0, 10, 0.1), interval=10)
+plt.show()

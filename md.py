@@ -51,7 +51,7 @@ def init_force():
         for inter_par in con.part_list[np.arange(len(con.part_list)) != i]:
             #inter_par = interact[0]
             r = nearest_image(curr_par,inter_par)
-            print(r)
+            #print(r)
             r_mag = mag(r)
             #print(r_mag)
             if r_mag <= con.cutoff:
@@ -64,7 +64,7 @@ def init_force():
                     b = con.interactions[inter_par.type, curr_par.type][1]
                 else: 
                     print("error - no interaction listed")
-                curr_force = (6*b / r_mag**7 - 12*a / r_mag**13) * r_hat
+                curr_force = -(6*b / r_mag**7 - 12*a / r_mag**13) * r_hat
                 #print(curr_force)
                 #print(curr_force)
                 con.part_list[i].force_last = con.part_list[i].force_last + curr_force
@@ -127,6 +127,7 @@ def forces():
     for i in range(len(con.part_list)):
         curr_par = con.part_list[i]
         curr_par.force.fill(0) #make all forces zero here to start
+        #print(curr_par.force)
         #print(constants.part_list[np.arange(len(constants.part_list)) != i])
         for inter_par in con.part_list[np.arange(len(con.part_list)) != i]:
             #inter_par = interact[0]
@@ -144,7 +145,7 @@ def forces():
                     b = con.interactions[inter_par.type, curr_par.type][1]
                 else: 
                     print("error - no interaction listed")
-                curr_force = (6*b / r_mag**7 - 12*a / r_mag**13) * r_hat
+                curr_force = -(6*b / r_mag**7 - 12*a / r_mag**13) * r_hat
                 #print(curr_force)
                 con.part_list[i].force = con.part_list[i].force + curr_force
                 #print(constants.part_list[i].force)
@@ -154,7 +155,18 @@ def forces():
 def update_velocity():
     #updates velocities, then shift forces. 
     for par in con.part_list:
-        par.vel = par.vel + con.dt * (par.force + par.force_last) * (2 * con.masses[par.type])**(-1)
+        #print("Pos")
+        #print(par.pos)
+        #print("Last Force:")
+        #print(par.force_last)
+        #print("Current Force:")
+        #print(par.force)
+        acc = par.force_last / con.masses[par.type]
+        acc_next = par.force / con.masses[par.type]
+        par.vel = par.vel + (con.dt * (acc + acc_next) * 0.5 )
+        #print("Change in velocity:")
+        #print(con.dt * (acc + acc_next) * 0.5 )
+        #print(par.vel)
         par.force_last = np.array(par.force)
     return
 
@@ -164,11 +176,12 @@ def update_pos():
         #y = (par.vel * con.dt)
         #print(y)
         #print(par.force_last)
-        par.pos = par.pos + (par.vel * con.dt) + (con.dt**2 * par.force_last / (2 * con.masses[par.type]))
+        acc = par.force_last / con.masses[par.type]
+        par.pos = par.pos + (par.vel * con.dt) + (con.dt**2 * acc * 0.5)
         #print(par.pos)
-        print(par.pos)
+        #print(par.pos)
         par.pos = par.pos % con.box
-        print(par.pos)
+        #print(par.pos)
     return
 
 def verlet():
@@ -201,6 +214,13 @@ def output_positions():
 def output_thermodynamics():
     return
 
+def animate():
+    return
+
+def plot_pos(ouput):
+    #Plots an animated plot from 
+    return
+
 ##########  MAIN WRAPPER FUNCTION  #############
 
 def run_md(position_inputs, constants_inputs, output):
@@ -214,11 +234,11 @@ def run_md(position_inputs, constants_inputs, output):
         h.close()
     initi(position_inputs, constants_inputs) #Load in constant, particle postions, and initialze velocity
     output_to_file(output)
-    while con.current_step < con.maxstep:
+    while con.current_step < con.maxstep + 1:
         verlet() #Calcuate forces, velocities, and updates postions
         output_to_file(output)
         con.current_step += 1 #Advance time-step
-        print(con.current_step)
+        #print(con.current_step)
         output_thermodynamics() 
     #Outputs
     return
@@ -237,3 +257,5 @@ def run_md(position_inputs, constants_inputs, output):
 
 run_md("pos.txt", "constants.txt","out.txt")
 #plot_velocity()
+
+print(con.interactions)
