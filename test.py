@@ -1,10 +1,13 @@
+import matplotlib.animation as animation
+import matplotlib.pyplot as plt
 import numpy as np
 
-a = np.array([0,1,2])     # a = array([9, 8, 7, 6, 5, 4, 3, 2, 1, 0])
-b = np.array([-1,3,1])
+fig = plt.figure()
 
-box = np.array([2,3,4])
+def updatefig(i):
+    fig.clear()
+    p = plt.plot(np.random.random(100))
+    plt.draw()
 
-h = (a + b) % box
-
-print(h)
+anim = animation.FuncAnimation(fig, updatefig, 10)
+anim.save("/tmp/test.avi", fps=1)

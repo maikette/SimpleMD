@@ -21,10 +21,12 @@ class Particle:
 
     def output_string(self):
         output = "Type: " + str(self.type)
-        output += "\nPos: "
+        output += " | Pos: "
         for i in self.pos:
             output += str(i) + " "
-        output += "\nVel: "
+        #    print(str(i))
+        #    print(" ")
+        output += "| Vel: "
         for i in self.vel:
             output += str(i) + " "
         return output
