@@ -7,4 +7,7 @@ type (type) | x_pos y_pos
 start
 type 0 | 5 3
 type 0 | 5 5
+type 0 | 10 4
+type 0 | 4 20
+type 0 | 100 6
 
