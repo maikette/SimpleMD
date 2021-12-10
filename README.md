@@ -15,3 +15,4 @@ Planned Features:
 --Thermostat (NVE --> NVT)
 --Animated Plotting
 --More Detailed Thermodynamic Output
+--Dynamic Stepping
