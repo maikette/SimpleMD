@@ -1,16 +1,16 @@
-dt: 0.005
+dt: 0.01
 cutoff:  15
-box: 1000 1000
-start_temp: 0
-maxstep: 1000000
+box: 30 30
+start_temp: 4000000000
+maxstep: 3000
 
 masses [type | mass]
-0 | 2
-1 | 5
+0 | 0.1
+1 | 0.1
 
-interactions - constants for the Lenard-Jones Potential. [type (type) | epsilon omega]
-0 0 | 0.6 0.9
-0 1 | 0.0001 1
-1 1 | 9 1
+interactions - constants for the Lenard-Jones Potential. [type type | epsilon omega]
+0 0 | 0.03 1
+0 1 | 0.001 4
+1 1 | 0.03 1
 
 end ~

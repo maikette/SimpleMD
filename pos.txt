@@ -1,13 +1,15 @@
-You can write anything you want here. Just don't have st*rt anywhere in here. 
+You can write anything you want here. Just don't have the start flag anywhere in here. 
 Write notes, titles, ext. 
 
 Format:
 type (type) | x_pos y_pos
 
-start
-type 0 | 5 3
-type 0 | 5 5
-type 0 | 10 4
-type 0 | 4 20
-type 0 | 100 6
-
+start ~~
+type 0 | 4 4
+type 0 | 4 9 
+type 1 | 8 4
+type 0 | 5 13
+type 1 | 15 6
+type 0 | 15 10
+type 0 | 15 26
+type 1 | 10 17

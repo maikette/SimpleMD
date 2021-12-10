@@ -16,8 +16,10 @@ class Particle:
         self.force = np.array([0.0,0.0])
         #previous force
         self.force_last = np.array([0.0,0.0])
-        self.ID = con.next_id
-        con.next_id = con.next_id + 1
+        #self.ID = con.next_id
+        #con.next_id = con.next_id + 1
+        #Potential Energy:
+        self.potential = 0.0
 
     def output_string(self):
         output = "Type: " + str(self.type)

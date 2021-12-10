@@ -7,6 +7,8 @@ import classes
 import constants as con
 import numpy as np
 from random import gauss
+import matplotlib.pyplot as plt
+import math
 
 ############ HELPER FUNCTIONS ################
 
@@ -38,7 +40,7 @@ def init_velocity():
     #Initalize Velocity based on the input starting temp. 
     # Randomized, but should conform for the Maxwell–Boltzmann distribution, with 0 net velocity. 
     for par in con.part_list:
-        par.vel = (con.kB * con.start_temp / con.masses[par.type] ) ** 0.5 * np.array([gauss(0,1),gauss(0,1)])
+        par.vel = math.sqrt(con.kB * con.start_temp / con.masses[par.type] ) * np.array([gauss(0,1),gauss(0,1)])
     return
 
 def init_force():
@@ -78,7 +80,7 @@ def initi(postion_inputs, constant_inputs):
         lines = f.readlines()
         start_flag = False
         for l in lines:
-            if "start" in l:
+            if "start ~~" in l:
                 start_flag = True
             elif "type" in l and start_flag: #Finds a line that contains particle information
                 spl = l.split()
@@ -114,7 +116,7 @@ def initi(postion_inputs, constant_inputs):
                     con.interactions[(int(spl[0]),int(spl[1]))] = [a,b]
                     k = k + 1
 
-    #check_pos_inputs()    
+    check_pos_inputs()    
     init_force()
     init_velocity() #Initalize velocities
     return
@@ -204,21 +206,58 @@ def output_to_file(output):
 
 def check_pos_inputs():
     for par in con.part_list:
-        for i in len(par.pos):
+        for i in range(0,len(par.pos)):
             if par.pos[i] > con.box[i]:
                 print("Error - provided postion is outside bounds")
+    return
 
 def output_positions():
     return
 
+veltime = []
+
 def output_thermodynamics():
+    v_sq = float()
+    m_total = 0 
+    for par in con.part_list:
+        v_sq = mag(par.vel) ** 2
+        v = mag(par.vel)
+        m_total += con.masses[par.type]
+    v_sq = v_sq / len(con.part_list)
+    v = v_sq / len(con.part_list)
+    t = v_sq * (m_total / len(con.part_list)) / (con.kB * 3)
+    print(t)
+    veltime.append(t)
+    return t
+
+def plot_temp():
+    x = [i for i in range(0,con.maxstep+1)]
+    plt.clf
+    plt.plot(x, veltime)
+    plt.savefig("vel.png")
+    plt.clf
     return
 
-def animate():
-    return
-
-def plot_pos(ouput):
-    #Plots an animated plot from 
+def plot_pos(step = 1):
+    #Simple Plot
+    if con.current_step % step == 0:
+        x = []
+        y = []
+        col = ['blue','red']
+        colors = []
+        for par in con.part_list:
+            x.append(par.pos[0])
+            y.append(par.pos[1])
+            #print(col[par.type])
+            colors.append(col[par.type])
+        #print(x)
+        #print(y)
+        plt.clf()
+        plt.scatter(x,y,c=colors)
+        plt.xlim([0,con.box[0]])
+        plt.ylim([0,con.box[1]])
+        path = "pictures/" + str(con.current_step) + ".png"
+        plt.savefig(path)
     return
 
 ##########  MAIN WRAPPER FUNCTION  #############
@@ -233,14 +272,18 @@ def run_md(position_inputs, constants_inputs, output):
     with open(output,'w') as h:
         h.close()
     initi(position_inputs, constants_inputs) #Load in constant, particle postions, and initialze velocity
-    output_to_file(output)
+    output_to_file(output) #Output starting postions and velocities to output file. 
+    output_thermodynamics()
+    con.current_step += 1
     while con.current_step < con.maxstep + 1:
         verlet() #Calcuate forces, velocities, and updates postions
         output_to_file(output)
         con.current_step += 1 #Advance time-step
         #print(con.current_step)
-        output_thermodynamics() 
+        output_thermodynamics()
+        plot_pos(2) 
     #Outputs
+    plot_temp()
     return
 
 
